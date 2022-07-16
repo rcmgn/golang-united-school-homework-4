@@ -2,6 +2,7 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -24,12 +25,31 @@ var (
 //
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
+func makeSum(input *string, sign1 uint8, sign2 uint8) error {
+	res := strings.Split(*input, "+")
+	a, err := strconv.Atoi(strings.Trim(res[0], " "))
+	if err != nil {
+		return err
+	}
+	b, err := strconv.Atoi(strings.Trim(res[1], " "))
+	if err != nil {
+		return err
+	}
+	if sign1 == '-' {
+		a = -a
+	}
+	if sign2 == '-' {
+		b = -b
+	}
+	*input = strconv.Itoa(a + b)
+}
+
 func StringSum(input string) (output string, err error) {
 	if (len(input)) == 0 {
-		return "", errorEmptyInput
+		return "", fmt.Errorf("[StringSum] internal error: %w", errorEmptyInput)
 	}
 	if len(input) < 3 {
-		return "", errorNotTwoOperands
+		return "", fmt.Errorf("[StringSum] internal error: %w", errorNotTwoOperands)
 	}
 	input = strings.Trim(input, " ")
 	var sign uint8
@@ -37,36 +57,16 @@ func StringSum(input string) (output string, err error) {
 		sign = input[0]
 		input = input[1:]
 	}
+	var e error
 	if len(strings.Split(input, "+")) == 2 {
-		res := strings.Split(input, "+")
-		a, err := strconv.Atoi(strings.Trim(res[0], " "))
-		if err != nil {
-			return "", err
-		}
-		b, err := strconv.Atoi(strings.Trim(res[1], " "))
-		if err != nil {
-			return "", err
-		}
-		if sign == '-' {
-			a = -a
-		}
-		input = strconv.Itoa(a + b)
+		e = makeSum(&input, sign, '+')
 	} else if len(strings.Split(input, "-")) == 2 {
-		res := strings.Split(input, "+")
-		a, err := strconv.Atoi(strings.Trim(res[0], " "))
-		if err != nil {
-			return "", err
-		}
-		b, err := strconv.Atoi(strings.Trim(res[1], " "))
-		if err != nil {
-			return "", err
-		}
-		if sign == '-' {
-			a = -a
-		}
-		input = strconv.Itoa(a - b)
+		e = makeSum(&input, sign, '-')
 	} else {
-		return "", errorNotTwoOperands
+		return "", fmt.Errorf("[StringSum] internal error: %w", errorNotTwoOperands)
+	}
+	if e != nil {
+		return "", fmt.Errorf("[StringSum] internal error: %w", e)
 	}
 	return input, nil
 }
