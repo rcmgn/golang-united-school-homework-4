@@ -46,11 +46,12 @@ func makeSum(input *string, sign1 uint8, sign2 uint8) error {
 }
 
 func StringSum(input string) (output string, err error) {
+	const errStr = "[StringSum] internal error: %w"
 	if (len(input)) == 0 {
-		return "", fmt.Errorf("[StringSum] internal error: %w", errorEmptyInput)
+		return "", fmt.Errorf(errStr, errorEmptyInput)
 	}
 	if len(input) < 3 {
-		return "", fmt.Errorf("[StringSum] internal error: %w", errorNotTwoOperands)
+		return "", fmt.Errorf(errStr, errorNotTwoOperands)
 	}
 	input = strings.Trim(input, " ")
 	var sign uint8
@@ -64,10 +65,10 @@ func StringSum(input string) (output string, err error) {
 	} else if len(strings.Split(input, "-")) == 2 {
 		e = makeSum(&input, sign, '-')
 	} else {
-		return "", fmt.Errorf("[StringSum] internal error: %w", errorNotTwoOperands)
+		return "", fmt.Errorf(errStr, errorNotTwoOperands)
 	}
 	if e != nil {
-		return "", fmt.Errorf("[StringSum] internal error: %w", e)
+		return "", fmt.Errorf(errStr, e)
 	}
 	return input, nil
 }
