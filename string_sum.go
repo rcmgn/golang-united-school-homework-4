@@ -42,6 +42,7 @@ func makeSum(input *string, sign1 uint8, sign2 uint8) error {
 		b = -b
 	}
 	*input = strconv.Itoa(a + b)
+	return nil
 }
 
 func StringSum(input string) (output string, err error) {
