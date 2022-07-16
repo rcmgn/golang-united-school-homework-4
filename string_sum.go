@@ -2,6 +2,8 @@ package string_sum
 
 import (
 	"errors"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -23,5 +25,48 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	if (len(input)) == 0 {
+		return "", errorEmptyInput
+	}
+	if len(input) < 3 {
+		return "", errorNotTwoOperands
+	}
+	input = strings.Trim(input, " ")
+	var sign uint8
+	if (input[0] == '-') || (input[0] == '+') {
+		sign = input[0]
+		input = input[1:]
+	}
+	if len(strings.Split(input, "+")) == 2 {
+		res := strings.Split(input, "+")
+		a, err := strconv.Atoi(strings.Trim(res[0], " "))
+		if err != nil {
+			return "", err
+		}
+		b, err := strconv.Atoi(strings.Trim(res[1], " "))
+		if err != nil {
+			return "", err
+		}
+		if sign == '-' {
+			a = -a
+		}
+		input = strconv.Itoa(a + b)
+	} else if len(strings.Split(input, "-")) == 2 {
+		res := strings.Split(input, "+")
+		a, err := strconv.Atoi(strings.Trim(res[0], " "))
+		if err != nil {
+			return "", err
+		}
+		b, err := strconv.Atoi(strings.Trim(res[1], " "))
+		if err != nil {
+			return "", err
+		}
+		if sign == '-' {
+			a = -a
+		}
+		input = strconv.Itoa(a - b)
+	} else {
+		return "", errorNotTwoOperands
+	}
+	return input, nil
 }
