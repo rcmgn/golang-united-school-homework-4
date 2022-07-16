@@ -26,7 +26,7 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func makeSum(input *string, sign1 uint8, sign2 uint8) error {
-	res := strings.Split(*input, "+")
+	res := strings.Split(*input, string(sign2))
 	a, err := strconv.Atoi(strings.Trim(res[0], " "))
 	if err != nil {
 		return err
